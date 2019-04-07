@@ -163,10 +163,13 @@ public class DLinkedPolynomial implements Polynomial {
             
             if(current.getInfo().expo == expo){
                 list.remove(current);
-                break;
+                return;
             }
             current = current.getNext();
         }
+
+
+        throw  new NoSuchTermExistsException();
        
         
     }
