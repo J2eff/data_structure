@@ -64,14 +64,23 @@ public class Box {
      * @return whether it reaches destination or not
      */
     public boolean move(int current, int delta) {
-        visited[current] = true;
        
         if(current == 0){
-            return true;
+            return true; //  목적지에 도착했으면 true를 리턴
+        }
+
+        if(current < 0 || current >= this.boxes.length || visited[current]==true){
+            return false; // list 가능한 index범위를 벗어나거나 현재의 위치가 방문한 곳이면 false를 리턴
         }
        
-        return  ( this.move(current-delta,boxes[current-delta]) || this.move(current+delta,boxes[current+delta]) ) ;
-        
+        this.visited[current] = true;  //현재 방문한 곳을 ture로 만들어줌
+        if (current-delta >0 ){ 
+            return this.move(current-delta,boxes[current-delta]);
+        }
+        if( current+delta < this.boxes.length){
+            return this.move(current-delta,boxes[current-delta]);
+        }
+        return true;
     }
 
 
