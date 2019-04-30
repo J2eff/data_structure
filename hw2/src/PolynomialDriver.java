@@ -24,7 +24,7 @@ public class PolynomialDriver {
         f.addTerm(3.0, 1);
         f.addTerm(2.0, 3);
         f.addTerm(7.0, 0);
-
+        
         System.out.println("f(x) = " + f);
         System.out.println("Degree: " + f.getDegree());
         System.out.println("f(10) = " + f.evaluate(10.0));

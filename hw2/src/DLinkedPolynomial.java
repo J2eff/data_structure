@@ -54,7 +54,7 @@ public class DLinkedPolynomial implements Polynomial {
     public int getDegree() {
         int maxExpo = 0;
         Node<Term> current = list.getFirstNode();
-        while(current != null&& current.getInfo()!=null){
+        while(current != null && current.getInfo()!=null){
             
             if(current.getInfo().expo > maxExpo){
                 maxExpo = current.getInfo().expo;
