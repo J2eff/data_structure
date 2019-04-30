@@ -64,23 +64,27 @@ public class Box {
      * @return whether it reaches destination or not
      */
     public boolean move(int current, int delta) {
-       
+        
         if(current == 0){
+            this.visited[current] = true;
             return true; //  목적지에 도착했으면 true를 리턴
         }
 
-        if(current < 0 || current >= this.boxes.length || visited[current]==true){
+        if( current < 0 || current >= this.boxes.length || visited[current]==true){
             return false; // list 가능한 index범위를 벗어나거나 현재의 위치가 방문한 곳이면 false를 리턴
         }
        
         this.visited[current] = true;  //현재 방문한 곳을 ture로 만들어줌
-        if (current-delta >0 ){ 
-            return this.move(current-delta,boxes[current-delta]);
+        
+        if (current-delta >=0 ){  //왼쪽으로 갈 수 있으면 왼쪽으로 이동(우선)
+            return this.move(current-delta, boxes[current-delta]);
         }
-        if( current+delta < this.boxes.length){
-            return this.move(current-delta,boxes[current-delta]);
+        if( current+delta < this.boxes.length){ //오른쪽으로 갈 수 있으면 오른쪽으로 이동
+            return this.move(current+delta, boxes[current+delta]);
         }
-        return true;
+
+
+        return false;
     }
 
 
@@ -105,9 +109,12 @@ public class Box {
 
         /* for testing */
         int[] xs = {0, 3, 2, 1, 2};
+        
         Box puzzle1 = new Box(xs);
         System.out.println(puzzle1.start());
         System.out.println(Arrays.toString(puzzle1.getVisitingStatus()));
+
+       
     }
 }
 
