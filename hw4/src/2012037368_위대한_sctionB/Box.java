@@ -76,23 +76,15 @@ public class Box {
        
         this.visited[current] = true;  //현재 방문한 곳을 ture로 만들어줌
         
-       
-        if( current-delta <0 || current+delta>= this.boxes.length ){
-            if( current-delta <0 && current+delta< this.boxes.length ){
-                return this.move(current+delta, boxes[current+delta]);
-            }else if( current-delta >=0 && current+delta >= this.boxes.length ) {
-                return this.move(current-delta, boxes[current-delta]) ;
-            }else{
-                return false;
-            }   
+        if (current-delta >=0 ){  //왼쪽으로 갈 수 있으면 왼쪽으로 이동(우선)
+            return this.move(current-delta, boxes[current-delta]);
         }
-        else{
-            return ( (this.move(current-delta, boxes[current-delta])) || (this.move(current+delta, boxes[current+delta])) );
+        if( current+delta < this.boxes.length){ //오른쪽으로 갈 수 있으면 오른쪽으로 이동
+            return this.move(current+delta, boxes[current+delta]);
         }
-        
 
 
-
+        return false;
     }
 
 

@@ -65,18 +65,20 @@ public class Box {
      */
     public boolean move(int current, int delta) {
         
+        if( current < 0 || current >= this.boxes.length || visited[current]==true){
+            return false; // list 가능한 index범위를 벗어나거나 현재의 위치가 방문한 곳이면 false를 리턴
+        }
+
         if(current == 0){
             this.visited[current] = true;
             return true; //  목적지에 도착했으면 true를 리턴
         }
 
-        if( current < 0 || current >= this.boxes.length || visited[current]==true){
-            return false; // list 가능한 index범위를 벗어나거나 현재의 위치가 방문한 곳이면 false를 리턴
-        }
+        
        
         this.visited[current] = true;  //현재 방문한 곳을 ture로 만들어줌
         
-       
+
         if( current-delta <0 || current+delta>= this.boxes.length ){
             if( current-delta <0 && current+delta< this.boxes.length ){
                 return this.move(current+delta, boxes[current+delta]);
@@ -89,11 +91,10 @@ public class Box {
         else{
             return ( (this.move(current-delta, boxes[current-delta])) || (this.move(current+delta, boxes[current+delta])) );
         }
-        
-
-
-
+       
+          
     }
+
 
 
     public boolean start() {
@@ -116,13 +117,12 @@ public class Box {
         System.out.println(Arrays.toString(puzzle.getVisitingStatus()));
 
         /* for testing */
-        int[] xs = {0, 3, 2, 1, 2};
-        
+        int[] xs = {0, 3, 1, 1, 2};
         Box puzzle1 = new Box(xs);
         System.out.println(puzzle1.start());
-        System.out.println(Arrays.toString(puzzle1.getVisitingStatus()));
+        System.out.println(Arrays.toString(puzzle1.getVisitingStatus())); 
 
-       
+      
     }
 }
 
