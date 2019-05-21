@@ -1,4 +1,5 @@
 import java.util.Stack;
+import java.util.Queue;
 
 public class SyntaxTree extends LinkedBinaryTree<String> {
     
@@ -11,41 +12,50 @@ public class SyntaxTree extends LinkedBinaryTree<String> {
           return false;
         }
       }
+    
+    private void setRootNode(Node<String> tartgetNode) {
+        this.root = tartgetNode;
+    }
+
+
 
     public static SyntaxTree buildSyntaxTree(String[] expr) {
         // construct an expression syntax tree ...
         // to make Syntax tree use stack 
-        Stack<String> stack = new Stack();
-        for(int i = 0; i< expr.length ; i++){
-            stack.push(expr[i]);
-        }
+        Stack<SyntaxTree> stack = new Stack();
 
-        System.out.println(stack.toString());
         SyntaxTree syntax = new SyntaxTree();
-        Position<String> parent = null;
-        if( !stack.empty() ){
-            syntax.addRoot(stack.pop());
-            parent = syntax.root();
-
-            while(!stack.empty()){
-                Node<String> child = syntax.createNode(stack.pop(), null, null, null);
-
-                if( syntax.isNumeric(child.getElement())  ){
-                    continue;
-                }
-            }
-
-        }else{
-            return (SyntaxTree)syntax;
-        }
         
+        for(int i = 0; i< expr.length ; i++){
+           if( syntax.isNumeric( expr[i])){
+               SyntaxTree temp =  new SyntaxTree(); //make sub binaryTree for number
+               temp.addRoot(expr[i]);
+               stack.push(temp);
 
-        return syntax;
+           }else{
+                SyntaxTree temp =  new SyntaxTree(); //make sub binaryTree for operator
+                temp.addRoot(expr[i]);
+
+                temp.attach(temp.root(),stack.pop(),stack.pop()); //attach two subtree to operator tree's root
+    
+                stack.push(temp);
+           }
+        }
+        return stack.pop();
     }
 
     public String parenthesize() {
         // you may define helper recursive method and use it here...
-        return "hi";
+        
+        SyntaxTree leftSubTree =  new SyntaxTree();
+        SyntaxTree rightSubTree = new SyntaxTree();
+        
+        leftSubTree.setRootNode( (Node<String>)this.root.getLeft() );
+        rightSubTree.setRootNode( (Node<String>)this.root.getRight() );
+
+      
+        return "("+leftSubTree.parenthesize() +" "+this.root().getElement() +" "+ rightSubTree.parenthesize()+")";
+        
 
     }
 
@@ -65,7 +75,6 @@ public class SyntaxTree extends LinkedBinaryTree<String> {
         return "hi";
 
     }
-
     
 
     public static void main(String... args) {
