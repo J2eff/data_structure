@@ -1,5 +1,9 @@
 import java.util.Stack;
 import java.util.Queue;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Iterator;
+
 
 public class SyntaxTree extends LinkedBinaryTree<String> {
     
@@ -35,8 +39,9 @@ public class SyntaxTree extends LinkedBinaryTree<String> {
            }else{
                 SyntaxTree temp =  new SyntaxTree(); //make sub binaryTree for operator
                 temp.addRoot(expr[i]);
-
-                temp.attach(temp.root(),stack.pop(),stack.pop()); //attach two subtree to operator tree's root
+                SyntaxTree subRight = stack.pop();
+                SyntaxTree subLeft = stack.pop();
+                temp.attach(temp.root(),subLeft,subRight); //attach two subtree to operator tree's root
     
                 stack.push(temp);
            }
@@ -47,32 +52,111 @@ public class SyntaxTree extends LinkedBinaryTree<String> {
     public String parenthesize() {
         // you may define helper recursive method and use it here...
         
-        SyntaxTree leftSubTree =  new SyntaxTree();
-        SyntaxTree rightSubTree = new SyntaxTree();
-        
-        leftSubTree.setRootNode( (Node<String>)this.root.getLeft() );
-        rightSubTree.setRootNode( (Node<String>)this.root.getRight() );
-
-      
-        return "("+leftSubTree.parenthesize() +" "+this.root().getElement() +" "+ rightSubTree.parenthesize()+")";
-        
-
+        return this.leftparenthesize()+this.root().getElement()+this.rightparenthesize();
     }
 
-    public double evaluate() {
+    public String leftparenthesize() {
         // you may define helper recursive method and use it here...
+        SyntaxTree leftSubTree =  new SyntaxTree();
+        
+        if( this.root.getLeft() != null){
+            leftSubTree.setRootNode( (Node<String>)this.root.getLeft() );
+            return "("+leftSubTree.parenthesize()+" ";
+        }
+        return "";
+    }
+    public String rightparenthesize() {
+        // you may define helper recursive method and use it here...
+        SyntaxTree rightSubTree = new SyntaxTree();
+        
+        if( this.root.getLeft()!= null){
+            rightSubTree.setRootNode( (Node<String>)this.root.getRight() );
+            return " "+rightSubTree.parenthesize()+")";
+
+        }
+    
+        return "";
+    }
+
+
+
+
+
+    public double evaluate() {
+       
+        SyntaxTree leftSubTree =  new SyntaxTree();
+        SyntaxTree rightSubTree = new SyntaxTree();
+
+
+        
         return 1.0;
     }
 
+    public double subTreeEvaluate(){ //sub method for evaluate
+       
+        return 1.0;
+    }
+
+
+
+
+
+    public Queue<Node<String>> makePreOrderQueue(){ //sub method for preorder queue
+        Iterable<Position<String>> iter = this.positions();
+        Queue<Node<String>> snapshot  = new LinkedList<Node<String>>();
+        for (Position<String> item : iter) {
+            snapshot.offer( (Node<String>)item);
+        }
+
+        return snapshot;
+    }
+
     public String toPrefix() {
-        // you may define helper recursive method and use it here...
-        return "hi";
+        Queue<Node<String>> snapshot  = this.makePreOrderQueue();
+        String prefixString = "";
+       
+        Node<String> temp = snapshot.poll();
+        SyntaxTree tempTree =  new SyntaxTree();
+        tempTree.setRootNode(temp);
+
+        while (temp != null) {
+            
+            prefixString = prefixString + temp.getElement()+" ";
+            temp = snapshot.poll();
+           
+        }
+
+        return prefixString.trim();
 
     }
 
     public String indentSyntaxTree() {
-        // you may define helper recursive method and use it here...
-        return "hi";
+
+       
+        Queue<Node<String>> snapshot  = this.makePreOrderQueue();
+       
+
+        String indentString = "";
+        
+        
+        Node<String> temp = snapshot.poll();
+        SyntaxTree tempTree =  new SyntaxTree();
+        tempTree.setRootNode(temp);
+
+        while (temp != null) {
+            
+            for(int i = 0 ; i < tempTree.depth(temp) ; i++){
+                indentString = indentString+"  ";
+            }
+
+            indentString = indentString + temp.getElement()+"\n";
+            temp = snapshot.poll();
+           
+        }
+
+       
+
+        return  indentString;
 
     }
     
@@ -80,6 +164,7 @@ public class SyntaxTree extends LinkedBinaryTree<String> {
     public static void main(String... args) {
         System.out.println("Homework 5");
         SyntaxTree tree = SyntaxTree.buildSyntaxTree("1 20 + 31 49 + *".split(" "));
+       
     }
 }
 
