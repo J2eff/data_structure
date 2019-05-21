@@ -1,6 +1,5 @@
 import java.util.Stack;
 import java.util.Queue;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Iterator;
 
@@ -20,8 +19,6 @@ public class SyntaxTree extends LinkedBinaryTree<String> {
     private void setRootNode(Node<String> tartgetNode) {
         this.root = tartgetNode;
     }
-
-
 
     public static SyntaxTree buildSyntaxTree(String[] expr) {
         // construct an expression syntax tree ...
@@ -84,17 +81,64 @@ public class SyntaxTree extends LinkedBinaryTree<String> {
 
     public double evaluate() {
        
-        SyntaxTree leftSubTree =  new SyntaxTree();
-        SyntaxTree rightSubTree = new SyntaxTree();
+        double value = 0.0;
 
-
-        
-        return 1.0;
+        value = this.subTreeEvaluate();
+        return value;
     }
 
     public double subTreeEvaluate(){ //sub method for evaluate
-       
-        return 1.0;
+        
+        if(this.height(this.root)  > 1){
+            SyntaxTree leftSubTree =  new SyntaxTree();
+            SyntaxTree rightSubTree = new SyntaxTree();
+            
+            Node<String> leftSubRoot = this.root.getLeft();
+            Node<String> rightSubRoot = this.root.getRight();
+
+            leftSubTree.setRootNode(leftSubRoot);
+            rightSubTree.setRootNode(rightSubRoot);
+            switch(this.root.getElement()) {
+                case "+":
+                    return leftSubTree.subTreeEvaluate() + rightSubTree.subTreeEvaluate();
+                    
+                case "-":
+                    return leftSubTree.subTreeEvaluate() - rightSubTree.subTreeEvaluate();
+                   
+                case "*":
+                    return leftSubTree.subTreeEvaluate() * rightSubTree.subTreeEvaluate();
+                   
+                case "/":
+                    return leftSubTree.subTreeEvaluate() / rightSubTree.subTreeEvaluate();
+                   
+                default:
+                    System.out.println("operator error");
+                    break;
+                }
+        }else{
+            if( !this.isNumeric(this.root.getElement() ) ) {
+                switch(this.root.getElement()) {
+                    case "+":
+                        return Double.parseDouble(this.root.getLeft().getElement()) + Double.parseDouble(this.root.getRight().getElement());
+                        
+                    case "-":
+                        return Double.parseDouble(this.root.getLeft().getElement()) - Double.parseDouble(this.root.getRight().getElement());
+                    
+                    case "*":
+                        return Double.parseDouble(this.root.getLeft().getElement()) * Double.parseDouble(this.root.getRight().getElement());
+                    
+                    case "/":
+                        return Double.parseDouble(this.root.getLeft().getElement()) / Double.parseDouble(this.root.getRight().getElement());
+                    
+                    default:
+                        System.out.println("operator error");
+                        break;
+                }
+            }else{
+                return Double.parseDouble(this.root.getElement());
+            }
+        }
+        return 0;
     }
 
 
@@ -112,7 +156,7 @@ public class SyntaxTree extends LinkedBinaryTree<String> {
     }
 
     public String toPrefix() {
-        Queue<Node<String>> snapshot  = this.makePreOrderQueue();
+        Queue<Node<String>> snapshot  = this.makePreOrderQueue(); 
         String prefixString = "";
        
         Node<String> temp = snapshot.poll();
@@ -164,6 +208,9 @@ public class SyntaxTree extends LinkedBinaryTree<String> {
     public static void main(String... args) {
         System.out.println("Homework 5");
         SyntaxTree tree = SyntaxTree.buildSyntaxTree("1 20 + 31 49 + *".split(" "));
+        SyntaxTree tree1 = SyntaxTree.buildSyntaxTree("1 2 + 3 4 2 / 5 * + *".split(" "));
+        System.out.println(tree.evaluate());
+        System.out.println(tree1.evaluate());
        
     }
 }
