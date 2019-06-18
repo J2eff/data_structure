@@ -78,7 +78,7 @@ public class SyntaxTreeTest {
     @BeforeEach
     void setUp() {
         for (int i = 0; i < 3; i++) {
-            trees[i] = buildSyntaxTree(inputs[i].split(" "));
+            trees[i] = SyntaxTree.buildSyntaxTree(inputs[i].split(" "));
         }
     }
 
